@@ -1,1 +1,3 @@
-# Constructive solid geometry on meshes using BSP trees in Go
+# csg
+
+Constructive solid geometry on meshes using BSP trees in Go
