@@ -40,13 +40,40 @@ b := Sphere(Center(0.25, 0.25, 0.25), Radius(1.3))
 |:---:|:---:|:---:|
 | `a.Union(b)`| `a.Subtract(b)` | `a.Intersect(b)` |
 
+## Combined CSG Example
 
+Below is a solid constructed from a combination of operations:
+
+| ![Cube](../assets/a.svg) | ![Sphere](../assets/b.svg) | ![Cylinder X](../assets/c.svg) | ![Cylinder Y](../assets/d.svg) | ![Cylinder Z](../assets/e.svg) |
+|:---:|:---:|:---:|:---:|:---:|
+| `a` | `b` | `c` | `d` | `e` |
+
+The solids above were generated with the following code:
+
+```go
+import . "github.com/reactivego/csg"
+
+a := Cube()
+b := Sphere(Radius(1.35), Stacks(12))
+c := Cylinder(Radius(0.7), Start(-1, 0, 0), End(1, 0, 0))
+d := Cylinder(Radius(0.7), Start(0, -1, 0), End(0, 1, 0))
+e := Cylinder(Radius(0.7), Start(0, 0, -1), End(0, 0, 1))
+```
+
+| ![Combined](../assets/combined.svg) |
+|:---:|
+| `a.Intersect(b).Subtract(c.Union(d).Union(e))` |
+
+The combined solid was generated with the code:
+```go
+a.Intersect(b).Subtract(c.Union(d).Union(e))
+```
 
 ## Implementation Details
 
 All CSG operations are implemented in terms of two functions, `ClipTo()` and
 `Invert()`, which remove parts of a BSP tree inside another BSP tree and swap
-solid and empty space, respectively. Tob find the union of `a` and `b`, we
+solid and empty space, respectively. To find the union of `a` and `b`, we
 want to remove everything in `a` inside `b` and everything in `b` inside `a`,
 then combine polygons from `a` and `b` into one solid:
 
